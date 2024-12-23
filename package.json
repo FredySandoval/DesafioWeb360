@@ -7,7 +7,8 @@
     "start": "node ./dist/main.js",
     "dev:tsc": "tsc --watch",
     "dev:node": "node --watch --env-file .env ./dist/server.js",
-    "setup:database": "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa  -C -i ./src/database/setupDatabase.sql",
+    "setup:database": "npm run setup:tables && npm run setup:storeProcedures",
+    "setup:tables": "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa  -C -i ./src/database/setupDatabase.sql",
     "setup:storeProcedures": "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa  -C -i ./src/database/storeProcedures.sql",
     "test": "npx newman run ./postman/setTest1.json"
   },
