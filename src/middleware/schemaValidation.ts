@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { UserRoles, UserStatus } from "../controllers/userController";
+import { Status, Roles } from "../controllers/userController";
 
 const userQuerySchema = Joi.object({
   firstname: Joi.string().max(50).optional().trim(),
   lastname: Joi.string().max(50).optional().trim(),
   email: Joi.string().max(50).optional().trim(),
-  status: Joi.string().optional().trim().valid(...Object.keys(UserStatus)),
-  role: Joi.string().optional().trim().valid(...Object.keys(UserRoles)),
+  status: Joi.string().optional().trim().valid(...Object.keys(Status).filter(key => isNaN(Number(key)))),
+  role: Joi.string().optional().trim().valid(...Object.keys(Roles).filter(key => isNaN(Number(key)))),
   limit: Joi.number().optional().min(0).max(100),
   page: Joi.number().optional().min(0).max(40),
 })
