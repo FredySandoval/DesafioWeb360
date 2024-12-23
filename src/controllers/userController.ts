@@ -74,7 +74,6 @@ const createUser = async (req: Request, res: Response) => {
     const result = await sequelize.query('EXEC CreateUser @UserJson = :userJson', { replacements: { userJson }, type: QueryTypes.RAW })
     res.status(200).json({ result })
   } catch (error) {
-
     res.status(409).json({ error: error, message: 'c/uC-1 unable to create user' })
   }
 }
