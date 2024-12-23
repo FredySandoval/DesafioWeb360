@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "New Request",
+			"name": "http://localhost:4000/api/v1/login",
 			"event": [
 				{
 					"listen": "test",
@@ -54,14 +54,28 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:4000/posts",
+			"name": "http://localhost:4000/api/v1/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyZWR5IFNhbmRvdmFsIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3MzQ4NTUxNjksImV4cCI6MTczNDk0MTU2OX0.P72QSDC_Up0tQiACU0_Kx5ybKmmXUodrpofrLt00lmU",
+							"value": "{{vault:token}}",
 							"type": "string"
 						}
 					]
@@ -69,14 +83,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:4000/posts",
+					"raw": "http://localhost:4000/api/v1/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "4000",
 					"path": [
-						"posts"
+						"api",
+						"v1",
+						"users"
 					]
 				}
 			},
@@ -84,19 +100,42 @@
 		},
 		{
 			"name": "http://localhost:4000/api/v1/logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInJvbGUiOjMsImlhdCI6MTczNDkxNjIxMSwiZXhwIjoxNzM1MDAyNjExfQ.LiB2xdK5cxC6qiXuZhQ6PKiQ6DvQsY3Y_CWrbMPndqU",
+							"value": "{{vault:token}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:4000/api/v1/logout",
 					"protocol": "http",
@@ -127,14 +166,37 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set('userRole', ['client', 'operator', 'admin'][Math.floor(Math.random() * 3)]);",
+							"pm.globals.set('dateOfBirth', new Date(new Date().getFullYear() - Math.floor(Math.random() * 121), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString())",
+							"//pm.collectionVariables.set('userRole', ['client', 'operator', 'admin'][Math.floor(Math.random() * 3)]);",
+							"//pm.collectionVariables.get('userRole', ['client', 'operator', 'admin'][Math.floor(Math.random() * 3)]);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "    { \n        \"firstName\"     : \"Donado\",\n        \"lastName\"      : \"Maldonado\",\n        \"email\"         : \"donado@gmail.com\",\n        \"password\"      : \"myPassword123\",\n        \"dateOfBirth\"   : \"1990-01-01T00:00:00Z\",\n        \"profilePicture\": \"profile.png\",\n        \"status\"        : \"pending\",\n        \"role\"          : \"client\"\n    }",
+					"raw": "{\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"myPassword123\",\n    \"dateOfBirth\": \"{{dateOfBirth}}\",\n    \"profilePicture\": \"profile.png\",\n    \"status\": \"pending\",\n    \"role\": \"{{userRole}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
