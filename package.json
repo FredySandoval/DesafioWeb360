@@ -1,0 +1,36 @@
+{
+  "name": "mitiendita",
+  "version": "1.0.0",
+  "main": "./src/server.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/main.js",
+    "dev:tsc": "tsc --watch",
+    "dev:node": "node --watch --env-file .env ./dist/server.js",
+    "setup:database": "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'FredySandoval1+' -C -i ./src/database/setupDatabase.sql",
+    "setup:storeProcedures": "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'FredySandoval1+' -C -i ./src/database/storeProcedures.sql",
+    "test": "npx newman run ./postman/setTest1.json"
+  },
+  "keywords": [
+    "typescript",
+    "node",
+    "express"
+  ],
+  "author": "Fredy Sandoval",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "newman": "^6.2.1",
+    "sequelize": "^6.37.5",
+    "tedious": "^18.6.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
